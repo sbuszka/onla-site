@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy — Onla</title>
+<meta name="description" content="How Onla handles your data. Short version: your trips are yours.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#46a4e1; --accent-strong:#2b76a8; --accent-wash:#e9f4fb;
+    --ink:#243a4d; --ink-muted:#5f7286;
+    --surface:#f2f7fc; --raised:#ffffff; --hairline:#dee9f3;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --accent:#58b1ea; --accent-strong:#58b1ea; --accent-wash:#213950;
+      --ink:#e8eff6; --ink-muted:#8fa2b6;
+      --surface:#0f1822; --raised:#17222e; --hairline:#223140;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Plus Jakarta Sans",-apple-system,system-ui,sans-serif;
+    background:var(--surface);color:var(--ink);line-height:1.65;padding:0 24px 80px}
+  main{max-width:640px;margin:0 auto}
+  .top{padding:44px 0 8px}
+  .top a{color:var(--accent-strong);text-decoration:none;font-weight:600;font-size:14px}
+  h1{font-size:clamp(30px,5vw,38px);font-weight:700;letter-spacing:-.02em;margin:18px 0 6px}
+  .date{color:var(--ink-muted);font-size:14px;margin:0 0 28px}
+  .lede{background:var(--accent-wash);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);
+    border-radius:14px;padding:18px 20px;font-size:16.5px;font-weight:600;margin:0 0 36px}
+  h2{font-size:20px;font-weight:700;letter-spacing:-.01em;margin:38px 0 10px}
+  p{font-size:15.5px;margin:0 0 14px}
+  ul{padding-left:22px;margin:0 0 14px}
+  li{font-size:15.5px;margin-bottom:8px}
+  strong{font-weight:700}
+  a{color:var(--accent-strong)}
+  footer{max-width:640px;margin:64px auto 0;padding-top:24px;border-top:1px solid var(--hairline);
+    font-size:13px;color:var(--ink-muted)}
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><a href="/">‹ Onla</a></div>
+  <h1>Privacy</h1>
+  <p class="date">Effective August 4, 2026</p>
+
+  <p class="lede">Your trips are yours. Onla works fully offline with no account, sells nothing to anyone, shows no ads, and does no cross-app tracking. This page explains the whole picture.</p>
+
+  <h2>On your device, by default</h2>
+  <p>Everything you put in Onla — trips, itineraries, ideas, documents — lives in a database on your device. You can use Onla with no account at all, forever, entirely offline. You can export all of it, or delete all of it, from the You tab at any time.</p>
+
+  <h2>If you sign in (optional)</h2>
+  <p>Signing in exists for one reason: backing up your trips and syncing them across your devices. When you do:</p>
+  <ul>
+    <li><strong>Your email address</strong> is used to sign you in (a one-time code — no password) and to identify your account.</li>
+    <li><strong>Your trips and itineraries</strong> are stored on our servers (hosted on Supabase) so your other devices can pull them. Access is scoped to your account alone.</li>
+    <li><strong>Documents you attach</strong> (tickets, confirmations) are stored in private cloud storage, accessible only to you.</li>
+  </ul>
+  <p>Sign out any time — your trips stay on your device.</p>
+
+  <h2>Importing bookings</h2>
+  <p>Onla can read a booking confirmation and file it to the right trip. Nothing is ever added to a trip without your explicit review and approval. Two paths, both account-only:</p>
+  <ul>
+    <li><strong>Email:</strong> when you forward a confirmation to your Onla import address, we process the message to extract the reservation details (flight, hotel, dates). The extracted booking waits in your private review inbox until you file or dismiss it. We keep a record of the addresses you've forwarded from so your future forwards reach your account.</li>
+    <li><strong>Photos and documents:</strong> when you photograph or share a confirmation, the image is uploaded to your private storage just long enough to read it, then the temporary copy is deleted. Automated AI extraction is used to read reservation details out of what you send; it is used for nothing else.</li>
+  </ul>
+
+  <h2>Notifications</h2>
+  <p>If you allow notifications, we store a push token for your device so we can tell you when a forwarded booking is ready to review. Decline, and everything still works — arrivals just wait quietly in the app.</p>
+
+  <h2>Places, weather, and photos</h2>
+  <p>When you search for a destination, Onla asks mapping, geocoding, weather, and photo services (such as Pexels for destination imagery) about that <em>place</em>. These lookups carry the place name — not your identity.</p>
+
+  <h2>Diagnostics</h2>
+  <p>If Onla crashes, an anonymous crash report is sent (via Sentry) so we can fix it. These reports carry no personal information — we've turned that off explicitly.</p>
+
+  <h2>What we don't do</h2>
+  <ul>
+    <li>No ads, and no data ever sold or shared for advertising.</li>
+    <li>No tracking you across other apps or websites.</li>
+    <li>No reading your data for any purpose beyond the features above.</li>
+  </ul>
+
+  <h2>Your controls</h2>
+  <ul>
+    <li><strong>Export all data</strong> — the You tab, anytime, no questions.</li>
+    <li><strong>Delete all data</strong> — the You tab; removes the cloud copy too when signed in.</li>
+    <li><strong>Sign out</strong> — your trips remain on your device.</li>
+  </ul>
+
+  <h2>Children</h2>
+  <p>Onla is not directed at children under 13, and we don't knowingly collect their information.</p>
+
+  <h2>Changes &amp; contact</h2>
+  <p>If this policy changes materially, the date above changes with it. Questions, concerns, or requests: <a href="mailto:feedback@onlatravel.com">feedback@onlatravel.com</a>.</p>
+</main>
+<footer>© 2026 Onla · Your trips are yours.</footer>
+</body>
+</html>
