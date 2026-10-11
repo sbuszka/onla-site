@@ -45,7 +45,7 @@
 <main>
   <div class="top"><a href="/">‹ Onla</a></div>
   <h1>Privacy</h1>
-  <p class="date">Effective August 11, 2026</p>
+  <p class="date">Effective October 10, 2026</p>
 
   <p class="lede">Your trips are yours. Onla works fully offline with no account, sells nothing to anyone, shows no ads, and does no cross-app tracking. This page explains the whole picture.</p>
 
@@ -62,17 +62,19 @@
   <p>Sign out any time — your trips stay on your device.</p>
 
   <h2>Importing bookings</h2>
-  <p>Onla can read a booking confirmation and file it to the right trip. On both paths below, automated AI extraction reads the reservation details (flight, hotel, dates) out of what you send; it is used for nothing else. Nothing is ever added to a trip without your explicit review and approval. Two paths, both account-only:</p>
+  <p>Onla can read a booking confirmation and file it to the right trip. This is optional, needs an account, and is <strong>off until you allow it</strong>: the first time you import a booking, Onla asks, and nothing is read before you say yes.</p>
+  <p>To read a confirmation, Onla sends the email, photo, or PDF you chose to <strong>Google's Gemini</strong>, an AI service, which picks out the reservation details (flight, hotel, dates, confirmation number). A confirmation can include your name and booking details. Onla uses Google's paid Gemini API, and under <a href="https://ai.google.dev/gemini-api/terms">its terms</a> Google does not use this content to improve its products; Google logs it for a limited time to prevent abuse and to meet legal requirements. Onla uses what comes back for nothing but filling in your trip, and nothing is ever added to a trip without your explicit review and approval. There are two ways in:</p>
   <ul>
-    <li><strong>Email:</strong> when you forward a confirmation to your Onla import address, the extracted booking waits in your private review inbox until you file or dismiss it. We keep a record of the addresses you've forwarded from so your future forwards reach your account.</li>
-    <li><strong>Photos and documents:</strong> when you photograph or share a confirmation, the image is uploaded to your private storage just long enough to read it, then the temporary copy is deleted.</li>
+    <li><strong>Email:</strong> a confirmation you forward to your Onla import address reaches us through Cloudflare's email routing. If you have allowed reading, the extracted booking waits in your private review inbox, with the email's subject and sender, until you file or dismiss it; the rest of the email is not kept. If you have not allowed reading, the email is discarded unread. We keep a record of the addresses you've forwarded from so your future forwards reach your account.</li>
+    <li><strong>Photos and documents:</strong> when you photograph or share a confirmation, the image is uploaded to your private storage just long enough to read it, then the temporary copy is deleted. If you choose not to have it read, a shared file can still be saved to a trip as a document.</li>
   </ul>
+  <p>Your choice is saved with your account, along with the date you made it, so it applies on all your devices. To turn reading off again, write to <a href="mailto:feedback@onlatravel.com">feedback@onlatravel.com</a>; deleting your data removes it too.</p>
 
   <h2>Notifications</h2>
   <p>If you allow notifications, we store a push token for your device so we can tell you when a forwarded booking is ready to review. Decline, and everything still works — arrivals just wait quietly in the app.</p>
 
   <h2>Places, weather, and photos</h2>
-  <p>When you search for a destination, Onla asks mapping, geocoding, weather, and photo services (such as Pexels for destination imagery) about that <em>place</em>. Flights fetch their airline's logo by airline code. These lookups carry the place or airline — not your identity.</p>
+  <p>When you search for a destination, Onla asks mapping, geocoding, weather, and photo services (such as Pexels for destination imagery) about that <em>place</em>. These lookups carry the place — not your identity.</p>
 
   <h2>Diagnostics</h2>
   <p>If Onla crashes, an anonymous crash report is sent (via Sentry) so we can fix it. These reports carry no personal information — we've turned that off explicitly.</p>
@@ -89,6 +91,7 @@
     <li><strong>Export all data</strong> — the You tab, anytime, no questions.</li>
     <li><strong>Delete all data</strong> — the You tab; removes the cloud copy too when signed in.</li>
     <li><strong>Sign out</strong> — your trips remain on your device.</li>
+    <li><strong>Booking reading</strong> — off until you allow it, and we'll switch it off again whenever you ask.</li>
   </ul>
 
   <h2>Children</h2>
