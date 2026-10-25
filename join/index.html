@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A trip on Onla</title>
+<meta name="description" content="You've been invited to a trip on Onla. Open the link to see it and join.">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="An invite to a trip on Onla">
+<meta property="og:description" content="Open it to see the trip and join.">
+<meta property="og:site_name" content="Onla">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* One column: the trip's name and who's inviting, then the way into the app.
+     The invite code rides after "#" in the link, so it never reaches this
+     server; the page asks Onla's database for the trip's name with it. */
+  :root{
+    --accent:#46a4e1; --accent-strong:#2b76a8; --secondary:#6783ab;
+    --ink:#243a4d; --ink-muted:#5f7286;
+    --surface:#f2f7fc; --raised:#ffffff; --hairline:#dee9f3;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --accent:#58b1ea; --accent-strong:#58b1ea; --secondary:#3e5679;
+      --ink:#e8eff6; --ink-muted:#8fa2b6;
+      --surface:#0f1822; --raised:#17222e; --hairline:#223140;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100svh; display:flex; flex-direction:column; align-items:center;
+    font-family:"Plus Jakarta Sans",-apple-system,system-ui,sans-serif;
+    background:var(--surface); color:var(--ink); padding:40px 16px 48px;
+  }
+  main{width:100%; max-width:440px; display:flex; flex-direction:column; gap:20px}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:700; font-size:17px; color:var(--ink)}
+  .mark{
+    width:34px;height:34px;border-radius:10px;
+    background:linear-gradient(150deg,var(--accent),var(--accent-strong));
+    display:flex;align-items:center;justify-content:center;
+  }
+  .mark svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .cover{background:var(--secondary); color:#fff; border-radius:22px; padding:28px 22px; display:flex; flex-direction:column; gap:6px}
+  .cover h1{margin:0; font-size:28px; line-height:1.15; letter-spacing:-.02em; overflow-wrap:anywhere}
+  .cover p{margin:0; font-size:14px; opacity:.85}
+  .who{font-size:16px; line-height:1.45; margin:0}
+  .who b{font-weight:700}
+  .btn{
+    display:block; text-align:center; text-decoration:none; border-radius:14px;
+    padding:16px; font-weight:700; font-size:17px;
+  }
+  .primary{background:var(--accent-strong); color:#fff}
+  .secondary{background:var(--raised); color:var(--accent-strong); border:1px solid var(--hairline)}
+  .fine{font-size:13px; color:var(--ink-muted); line-height:1.5; margin:0}
+  .muted{color:var(--ink-muted)}
+  [hidden]{display:none !important}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">
+    <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+    Onla
+  </div>
+
+  <section id="loading"><p class="muted">Opening your invite…</p></section>
+
+  <section id="invite" hidden>
+    <div style="display:flex; flex-direction:column; gap:20px">
+      <div class="cover">
+        <h1 id="trip"></h1>
+        <p id="dates" hidden></p>
+      </div>
+      <p class="who" id="who"></p>
+      <a class="btn primary" id="open" href="#">Open in Onla</a>
+      <a class="btn secondary" href="https://apps.apple.com/app/id6793815689">Get Onla for iPhone</a>
+      <p class="fine">Already have Onla? Tap <b>Open in Onla</b> to see the trip and join. New to it? Get the app, then come back and tap this link again.</p>
+    </div>
+  </section>
+
+  <section id="dead" hidden>
+    <h1 style="font-size:26px; margin:0 0 10px">This link no longer works</h1>
+    <p class="fine" id="dead-why" style="font-size:15px"></p>
+  </section>
+</main>
+<script>
+(function () {
+  var SUPABASE_URL = 'https://bavkfikhzhtmtwjkmaom.supabase.co';
+  var ANON_KEY = 'sb_publishable_FDTE16uzAeTo-gAbFCqumw_1pdY7eKn';
+  var REASONS = {
+    unknown: "This invite link doesn't work. Ask whoever sent it for a new one.",
+    revoked: 'This invite link was turned off. Ask whoever sent it for a new one.',
+    expired: 'This invite link has expired. Ask whoever sent it for a new one.',
+    used: 'This invite has already been used. Ask whoever sent it for a new one.',
+    paused: 'This link is paused because a lot of people opened it at once. Ask whoever sent it.',
+    gone: "This trip isn't around anymore."
+  };
+  var code = (location.hash || '').replace(/^#/, '').trim();
+  function show(id) {
+    ['loading', 'invite', 'dead'].forEach(function (s) { document.getElementById(s).hidden = s !== id; });
+  }
+  function dead(why) {
+    document.getElementById('dead-why').textContent = why;
+    show('dead');
+  }
+  function range(a, b) {
+    var o = { month: 'short', day: 'numeric' };
+    var s = new Date(a + 'T12:00:00'), e = new Date(b + 'T12:00:00');
+    return s.toLocaleDateString(undefined, o) + ' – ' + e.toLocaleDateString(undefined, o);
+  }
+  if (!/^[A-Za-z0-9_-]{20,40}$/.test(code)) { dead(REASONS.unknown); return; }
+  document.getElementById('open').href = 'onla://join/' + code;
+
+  fetch(SUPABASE_URL + '/rest/v1/rpc/invite_preview', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: ANON_KEY, Authorization: 'Bearer ' + ANON_KEY },
+    body: JSON.stringify({ p_token: code })
+  })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (p) {
+      if (!p || !p.valid) { dead(REASONS[p && p.reason] || REASONS.unknown); return; }
+      document.title = p.trip_name + ' on Onla';
+      document.getElementById('trip').textContent = p.trip_name;
+      if (p.start_date && p.end_date) {
+        var d = document.getElementById('dates');
+        d.textContent = range(p.start_date, p.end_date);
+        d.hidden = false;
+      }
+      var who = document.getElementById('who');
+      var b = document.createElement('b');
+      b.textContent = p.inviter_name || 'Someone';
+      who.appendChild(b);
+      who.appendChild(document.createTextNode(
+        ' invited you to ' + (p.role === 'editor' ? 'plan' : 'follow') + ' this trip' +
+        (p.asks_first ? '. An organizer lets you in.' : '.')
+      ));
+      show('invite');
+    })
+    .catch(function () {
+      document.getElementById('trip').textContent = 'A trip on Onla';
+      document.getElementById('who').textContent = 'Open the app to see the trip and join.';
+      show('invite');
+    });
+})();
+</script>
+</body>
+</html>
