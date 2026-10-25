@@ -13,28 +13,30 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* One column: the trip's name and who's inviting, then the way into the app.
-     The invite code rides after "#" in the link, so it never reaches this
-     server; the page asks Onla's database for the trip's name with it. */
+  /* One column. First the invite (the trip's name and who's inviting) with
+     the ways in: the app, or for a link to view, right here in the browser.
+     In the browser the visitor follows as a guest: asks, waits to be let in,
+     then reads the trip day by day, kept current as it changes. The invite
+     code rides after "#", so it never reaches this server. */
   :root{
     --accent:#46a4e1; --accent-strong:#2b76a8; --secondary:#6783ab;
     --ink:#243a4d; --ink-muted:#5f7286;
-    --surface:#f2f7fc; --raised:#ffffff; --hairline:#dee9f3;
+    --surface:#f2f7fc; --raised:#ffffff; --hairline:#dee9f3; --wash:#e3f0fa; --warn:#a76c17;
   }
   @media (prefers-color-scheme: dark){
     :root{
       --accent:#58b1ea; --accent-strong:#58b1ea; --secondary:#3e5679;
       --ink:#e8eff6; --ink-muted:#8fa2b6;
-      --surface:#0f1822; --raised:#17222e; --hairline:#223140;
+      --surface:#0f1822; --raised:#17222e; --hairline:#223140; --wash:#15283a; --warn:#e0a64b;
     }
   }
   *{box-sizing:border-box}
   body{
     margin:0; min-height:100svh; display:flex; flex-direction:column; align-items:center;
     font-family:"Plus Jakarta Sans",-apple-system,system-ui,sans-serif;
-    background:var(--surface); color:var(--ink); padding:40px 16px 48px;
+    background:var(--surface); color:var(--ink); padding:40px 16px 56px;
   }
-  main{width:100%; max-width:440px; display:flex; flex-direction:column; gap:20px}
+  main{width:100%; max-width:480px; display:flex; flex-direction:column; gap:20px}
   .brand{display:flex; align-items:center; gap:10px; font-weight:700; font-size:17px; color:var(--ink)}
   .mark{
     width:34px;height:34px;border-radius:10px;
@@ -47,14 +49,38 @@
   .cover p{margin:0; font-size:14px; opacity:.85}
   .who{font-size:16px; line-height:1.45; margin:0}
   .who b{font-weight:700}
+  .stack{display:flex; flex-direction:column; gap:12px}
   .btn{
-    display:block; text-align:center; text-decoration:none; border-radius:14px;
-    padding:16px; font-weight:700; font-size:17px;
+    display:block; width:100%; text-align:center; text-decoration:none; border-radius:14px; border:0;
+    padding:16px; font:700 17px/1.2 "Plus Jakarta Sans",-apple-system,system-ui,sans-serif; cursor:pointer;
   }
+  .btn:focus-visible, input:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
   .primary{background:var(--accent-strong); color:#fff}
+  .primary[disabled]{opacity:.5; cursor:default}
   .secondary{background:var(--raised); color:var(--accent-strong); border:1px solid var(--hairline)}
+  .link{background:none; border:0; color:var(--accent-strong); font:600 14px/1.4 inherit; padding:4px; cursor:pointer; align-self:center}
   .fine{font-size:13px; color:var(--ink-muted); line-height:1.5; margin:0}
-  .muted{color:var(--ink-muted)}
+  .fine a{color:var(--accent-strong); font-weight:600}
+  label{font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-muted)}
+  input{
+    width:100%; margin-top:6px; padding:14px; border-radius:12px; border:1px solid var(--hairline);
+    background:var(--raised); color:var(--ink); font:500 16px/1.3 inherit;
+  }
+  .card{background:var(--raised); border:1px solid var(--hairline); border-radius:16px; overflow:hidden}
+  .day{display:flex; flex-direction:column; gap:8px}
+  .dayhead{display:flex; align-items:baseline; gap:8px; padding:0 2px}
+  .dayhead .wd{font-size:12px; font-weight:700; letter-spacing:.06em; color:var(--ink-muted); text-transform:uppercase}
+  .dayhead .dt{font-size:20px; font-weight:700; letter-spacing:-.01em}
+  .plan{display:flex; gap:12px; padding:13px 16px; align-items:flex-start}
+  .plan + .plan{border-top:1px solid var(--hairline)}
+  .kind{flex:none; min-width:58px; font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+        color:var(--accent-strong); background:var(--wash); border-radius:8px; padding:5px 6px; text-align:center}
+  .plan .body{flex:1; min-width:0; display:flex; flex-direction:column; gap:2px}
+  .plan .title{font-weight:600; font-size:15.5px; overflow-wrap:anywhere}
+  .plan .sub{font-size:13px; color:var(--ink-muted); overflow-wrap:anywhere}
+  .plan .when{flex:none; font-size:13.5px; font-weight:600; color:var(--ink); font-variant-numeric:tabular-nums; text-align:right}
+  .empty{font-size:14px; color:var(--ink-muted); padding:2px}
+  .notice{background:var(--wash); border-radius:14px; padding:14px 16px; font-size:14px; line-height:1.5}
   [hidden]{display:none !important}
 </style>
 </head>
@@ -65,26 +91,67 @@
     Onla
   </div>
 
-  <section id="loading"><p class="muted">Opening your invite…</p></section>
+  <section id="loading"><p class="fine" style="font-size:15px">Opening your invite…</p></section>
 
   <section id="invite" hidden>
-    <div style="display:flex; flex-direction:column; gap:20px">
+    <div class="stack" style="gap:20px">
       <div class="cover">
         <h1 id="trip"></h1>
         <p id="dates" hidden></p>
       </div>
       <p class="who" id="who"></p>
-      <a class="btn primary" id="open" href="#">Open in Onla</a>
-      <a class="btn secondary" href="https://apps.apple.com/app/id6793815689">Get Onla for iPhone</a>
-      <p class="fine">Already have Onla? Tap <b>Open in Onla</b> to see the trip and join. New to it? Get the app, then come back and tap this link again.</p>
+      <div class="stack">
+        <a class="btn primary" id="open" href="#">Open in Onla</a>
+        <button class="btn secondary" id="browse" type="button" hidden>View in your browser</button>
+        <a class="btn secondary" id="get" href="https://apps.apple.com/app/id6793815689">Get Onla for iPhone</a>
+      </div>
+      <p class="fine" id="invite-fine">Already have Onla? Tap <b>Open in Onla</b> to see the trip and join. New to it? Get the app, then come back and tap this link again.</p>
+    </div>
+  </section>
+
+  <section id="ask" hidden>
+    <form class="stack" id="ask-form" style="gap:16px">
+      <div class="cover"><h1 id="ask-trip"></h1></div>
+      <p class="who">Follow it here, no account needed. Your name lets the organizer know who's asking.</p>
+      <div>
+        <label for="name">Your name</label>
+        <input id="name" name="name" autocomplete="name" maxlength="60" required placeholder="e.g. Grandma Jo">
+      </div>
+      <button class="btn primary" id="ask-btn" type="submit">Ask to view</button>
+      <button class="link" type="button" id="ask-back">Back</button>
+      <p class="fine">You'll see the plan as it changes. Confirmation numbers, seats and documents stay private.</p>
+    </form>
+  </section>
+
+  <section id="waiting" hidden>
+    <div class="stack" style="gap:16px">
+      <div class="cover"><h1 id="wait-trip"></h1></div>
+      <div class="notice" id="wait-text"></div>
+      <p class="fine">You can leave this page open, or come back to this link later.</p>
+    </div>
+  </section>
+
+  <section id="view" hidden>
+    <div class="stack" style="gap:22px">
+      <div class="cover">
+        <h1 id="view-trip"></h1>
+        <p id="view-dates" hidden></p>
+      </div>
+      <div id="days" class="stack" style="gap:22px"></div>
+      <div class="stack">
+        <button class="btn secondary" id="handoff" type="button">Open in the app</button>
+        <p class="fine" id="handoff-fine">Moves this trip to Onla on your phone, where it keeps updating. Don't have it yet? <a href="https://apps.apple.com/app/id6793815689">Get Onla for iPhone</a> first.</p>
+        <button class="link" type="button" id="leave">Stop following this trip</button>
+      </div>
     </div>
   </section>
 
   <section id="dead" hidden>
-    <h1 style="font-size:26px; margin:0 0 10px">This link no longer works</h1>
+    <h1 style="font-size:26px; margin:0 0 10px" id="dead-title">This link no longer works</h1>
     <p class="fine" id="dead-why" style="font-size:15px"></p>
   </section>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 (function () {
   var SUPABASE_URL = 'https://bavkfikhzhtmtwjkmaom.supabase.co';
@@ -97,52 +164,291 @@
     paused: 'This link is paused because a lot of people opened it at once. Ask whoever sent it.',
     gone: "This trip isn't around anymore."
   };
+  var ANCHOR = { morning: '09:00', midday: '12:00', afternoon: '15:00', evening: '19:00', night: '22:00' };
+  var PART = { morning: 'Morning', midday: 'Midday', afternoon: 'Afternoon', evening: 'Evening', night: 'Night' };
+  var KIND = { flight: 'Flight', lodging: 'Stay', rental: 'Car', transit: 'Transit', cruise: 'Cruise', meal: 'Meal', activity: 'Plan', reminder: 'Note', other: 'Plan' };
+
   var code = (location.hash || '').replace(/^#/, '').trim();
+  var memoKey = 'onla:join:' + code;
+  var sb = window.supabase && window.supabase.createClient(SUPABASE_URL, ANON_KEY);
+  var preview = null;
+  var tripId = null;
+  var channel = null;
+  var pollTimer = null;
+  var leaving = false;
+
+  function $(id) { return document.getElementById(id); }
   function show(id) {
-    ['loading', 'invite', 'dead'].forEach(function (s) { document.getElementById(s).hidden = s !== id; });
+    ['loading', 'invite', 'ask', 'waiting', 'view', 'dead'].forEach(function (s) { $(s).hidden = s !== id; });
+    window.scrollTo(0, 0);
   }
-  function dead(why) {
-    document.getElementById('dead-why').textContent = why;
-    show('dead');
-  }
+  function dead(title, why) { $('dead-title').textContent = title; $('dead-why').textContent = why; show('dead'); }
+  function remember(v) { try { if (v) localStorage.setItem(memoKey, JSON.stringify(v)); else localStorage.removeItem(memoKey); } catch (e) {} }
+  function recall() { try { return JSON.parse(localStorage.getItem(memoKey) || 'null'); } catch (e) { return null; } }
+  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+  function iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function parse(day) { return new Date(day + 'T12:00:00'); }
   function range(a, b) {
     var o = { month: 'short', day: 'numeric' };
-    var s = new Date(a + 'T12:00:00'), e = new Date(b + 'T12:00:00');
-    return s.toLocaleDateString(undefined, o) + ' – ' + e.toLocaleDateString(undefined, o);
+    return parse(a).toLocaleDateString(undefined, o) + ' – ' + parse(b).toLocaleDateString(undefined, o);
   }
-  if (!/^[A-Za-z0-9_-]{20,40}$/.test(code)) { dead(REASONS.unknown); return; }
-  document.getElementById('open').href = 'onla://join/' + code;
+  function clock(hhmm) { return new Date('2000-01-01T' + hhmm + ':00').toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }); }
+  function rec(v) { return v && typeof v === 'object' ? v : {}; }
 
-  fetch(SUPABASE_URL + '/rest/v1/rpc/invite_preview', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', apikey: ANON_KEY, Authorization: 'Bearer ' + ANON_KEY },
-    body: JSON.stringify({ p_token: code })
-  })
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(function (p) {
-      if (!p || !p.valid) { dead(REASONS[p && p.reason] || REASONS.unknown); return; }
+  if (!/^[A-Za-z0-9_-]{20,40}$/.test(code)) { dead('This link no longer works', REASONS.unknown); return; }
+  $('open').href = 'onla://join/' + code;
+
+  // ── the invite ──────────────────────────────────────────────────────────
+  function start() {
+    var memo = recall();
+    sb.auth.getSession().then(function (r) {
+      var session = r.data && r.data.session;
+      // Came back after asking or joining here: straight to the trip.
+      if (session && memo && memo.tripId) { tripId = memo.tripId; return openTrip(); }
+      return loadPreview();
+    });
+  }
+
+  function loadPreview() {
+    return sb.rpc('invite_preview', { p_token: code }).then(function (r) {
+      var p = r.data;
+      if (r.error || !p) throw r.error || new Error('no preview');
+      if (!p.valid) { dead('This link no longer works', REASONS[p.reason] || REASONS.unknown); return; }
+      preview = p;
       document.title = p.trip_name + ' on Onla';
-      document.getElementById('trip').textContent = p.trip_name;
-      if (p.start_date && p.end_date) {
-        var d = document.getElementById('dates');
-        d.textContent = range(p.start_date, p.end_date);
-        d.hidden = false;
-      }
-      var who = document.getElementById('who');
+      $('trip').textContent = p.trip_name;
+      if (p.start_date && p.end_date) { $('dates').textContent = range(p.start_date, p.end_date); $('dates').hidden = false; }
+      var who = $('who');
+      who.textContent = '';
       var b = document.createElement('b');
       b.textContent = p.inviter_name || 'Someone';
       who.appendChild(b);
       who.appendChild(document.createTextNode(
-        ' invited you to ' + (p.role === 'editor' ? 'plan' : 'follow') + ' this trip' +
-        (p.asks_first ? '. An organizer lets you in.' : '.')
-      ));
+        ' invited you to ' + (p.role === 'editor' ? 'plan' : 'follow') + ' this trip' + (p.asks_first ? '. An organizer lets you in.' : '.')));
+      // Following needs no app; planning does.
+      var viewing = p.role === 'viewer';
+      $('browse').hidden = !viewing;
+      if (viewing) {
+        $('invite-fine').textContent = 'Open it in Onla, or follow it right here in your browser. No account needed.';
+      }
       show('invite');
-    })
-    .catch(function () {
-      document.getElementById('trip').textContent = 'A trip on Onla';
-      document.getElementById('who').textContent = 'Open the app to see the trip and join.';
+    }).catch(function () {
+      $('trip').textContent = 'A trip on Onla';
+      $('who').textContent = 'Open the app to see the trip and join.';
       show('invite');
     });
+  }
+
+  $('browse').addEventListener('click', function () {
+    $('ask-trip').textContent = preview ? preview.trip_name : 'This trip';
+    $('ask-btn').textContent = preview && !preview.asks_first ? 'Follow this trip' : 'Ask to view';
+    show('ask');
+    setTimeout(function () { $('name').focus(); }, 50);
+  });
+  $('ask-back').addEventListener('click', function () { show('invite'); });
+
+  // ── asking, as a guest ──────────────────────────────────────────────────
+  $('ask-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = $('name').value.trim();
+    if (!name) return;
+    var btn = $('ask-btn');
+    btn.disabled = true;
+    btn.textContent = 'Asking…';
+    sb.auth.getSession().then(function (r) {
+      if (r.data && r.data.session) return r;
+      return sb.auth.signInAnonymously();
+    }).then(function (r) {
+      if (r.error) throw r.error;
+      return sb.functions.invoke('join-trip', { body: { token: code, name: name, traveling: false } });
+    }).then(function (r) {
+      if (r.error) {
+        var ctx = r.error.context;
+        return (ctx && ctx.json ? ctx.json() : Promise.resolve(null)).then(function (body) {
+          throw new Error((body && body.error) || r.error.message);
+        });
+      }
+      tripId = r.data.trip_id;
+      remember({ tripId: tripId });
+      return r.data.status === 'pending' ? waitToBeLetIn() : openTrip();
+    }).catch(function (err) {
+      btn.disabled = false;
+      btn.textContent = 'Ask to view';
+      alertInline(err && err.message ? err.message : "Couldn't ask. Check your connection and try again.");
+    });
+  });
+
+  function alertInline(msg) {
+    var p = $('ask-form').querySelector('.fine');
+    p.textContent = msg;
+    p.style.color = 'var(--warn)';
+  }
+
+  // ── waiting to be let in ────────────────────────────────────────────────
+  function waitToBeLetIn() {
+    $('wait-trip').textContent = preview ? preview.trip_name : 'This trip';
+    $('wait-text').textContent = 'Asked ' + ((preview && preview.inviter_name) || 'the organizer') +
+      '. This page opens the trip as soon as you\'re let in.';
+    show('waiting');
+    return sb.auth.getUser().then(function (r) {
+      var uid = r.data && r.data.user && r.data.user.id;
+      if (!uid) return;
+      listen(uid);
+      clearInterval(pollTimer);
+      pollTimer = setInterval(function () { checkStatus(uid); }, 20000);
+    });
+  }
+
+  function checkStatus(uid) {
+    if (leaving) return Promise.resolve();
+    return sb.from('trip_members').select('status').eq('trip_id', tripId).eq('user_id', uid).maybeSingle().then(function (r) {
+      if (r.data && r.data.status === 'active') { clearInterval(pollTimer); openTrip(); }
+      else if (!r.error && !r.data) { clearInterval(pollTimer); turnedAway(); }
+    });
+  }
+
+  function listen(uid) {
+    if (channel) sb.removeChannel(channel);
+    channel = sb.channel('guest-' + uid)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'trip_members', filter: 'user_id=eq.' + uid }, function () { checkStatus(uid); })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'trip_pulses', filter: 'trip_id=eq.' + tripId }, function () { refresh(); })
+      .subscribe();
+  }
+
+  function turnedAway() {
+    remember(null);
+    if (channel) { sb.removeChannel(channel); channel = null; }
+    // Removed while reading the trip, or turned down while asking.
+    if (!$('view').hidden) dead("You're not on this trip anymore", 'Ask whoever invited you for a new link.');
+    else dead('Not let in this time', "The organizer didn't add you to this trip. Ask them if you think that's a mistake.");
+  }
+
+  // ── the trip ────────────────────────────────────────────────────────────
+  var refreshing = null;
+  function refresh() {
+    clearTimeout(refreshing);
+    refreshing = setTimeout(function () { load(false); }, 400);
+  }
+
+  function openTrip() {
+    return sb.auth.getUser().then(function (r) {
+      var uid = r.data && r.data.user && r.data.user.id;
+      if (!uid) { remember(null); return loadPreview(); }
+      listen(uid);
+      return load(true);
+    });
+  }
+
+  function load(first) {
+    return sb.rpc('trip_snapshot', { p_trip: tripId }).then(function (r) {
+      if (r.error) {
+        if (first) {
+          // Still asking, or no longer on it.
+          return sb.auth.getUser().then(function (u) {
+            var uid = u.data && u.data.user && u.data.user.id;
+            return sb.from('trip_members').select('status').eq('trip_id', tripId).eq('user_id', uid).maybeSingle();
+          }).then(function (m) {
+            if (m.data && m.data.status === 'pending') return waitToBeLetIn();
+            remember(null);
+            dead("You're not on this trip anymore", 'Ask whoever invited you for a new link.');
+          });
+        }
+        return;
+      }
+      render(r.data);
+      show('view');
+    });
+  }
+
+  function render(snap) {
+    var trip = snap.trip;
+    if (trip.deleted_at) { remember(null); dead("This trip isn't around anymore", 'The organizer removed it.'); return; }
+    document.title = trip.name + ' on Onla';
+    $('view-trip').textContent = trip.name;
+    var legs = (snap.legs || []).slice().sort(function (a, b) { return (a.order_index || 0) - (b.order_index || 0); });
+    var start = legs.length ? legs[0].start_date : null;
+    var end = legs.length ? legs[legs.length - 1].end_date : null;
+    if (start && end) { $('view-dates').textContent = range(start, end); $('view-dates').hidden = false; }
+
+    // Every day of the trip, plus any plan dated outside it.
+    var days = {};
+    legs.forEach(function (l) {
+      for (var d = parse(l.start_date); iso(d) <= l.end_date; d.setDate(d.getDate() + 1)) days[iso(d)] = [];
+    });
+    (snap.activities || []).forEach(function (a) { (days[a.date] = days[a.date] || []).push(a); });
+    var order = Object.keys(days).sort();
+    var html = order.map(function (day) {
+      var plans = days[day].sort(function (a, b) {
+        var ta = a.time || (a.day_part ? ANCHOR[a.day_part] : '');
+        var tb = b.time || (b.day_part ? ANCHOR[b.day_part] : '');
+        return ta === tb ? String(a.sort_index).localeCompare(String(b.sort_index)) : ta.localeCompare(tb);
+      });
+      var d = parse(day);
+      var head = '<div class="dayhead"><span class="wd">' + esc(d.toLocaleDateString(undefined, { weekday: 'short' })) +
+        '</span><span class="dt">' + esc(d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })) + '</span></div>';
+      var body = plans.length
+        ? '<div class="card">' + plans.map(planRow).join('') + '</div>'
+        : '<div class="empty">Nothing planned — the best kind of day</div>';
+      return '<div class="day">' + head + body + '</div>';
+    }).join('');
+    $('days').innerHTML = html || '<div class="empty">No days planned yet.</div>';
+  }
+
+  function planRow(a) {
+    var m = rec(a.meta);
+    var title = a.title;
+    if (a.kind === 'flight') {
+      var from = rec(m.from).iata, to = rec(m.to).iata;
+      var num = [m.airlineCode, m.flightNumber].filter(Boolean).join(' ');
+      if (from && to) title = from + ' → ' + to + (num ? ' · ' + num : '');
+    } else if (a.kind === 'transit') {
+      var tf = rec(m.from).city || rec(m.from).name, tt = rec(m.to).city || rec(m.to).name;
+      if (tf && tt) title = tf + ' → ' + tt;
+    }
+    title = title || a.location_text || KIND[a.kind] || 'Plan';
+    var sub = [];
+    if (a.location_text && a.location_text !== title) sub.push(a.location_text);
+    var cost = rec(m.cost);
+    if (typeof cost.amount === 'number') {
+      try { sub.push(new Intl.NumberFormat(undefined, { style: 'currency', currency: cost.currency || 'USD' }).format(cost.amount)); } catch (e) {}
+    }
+    if (a.notes) sub.push(a.notes);
+    var when = a.time ? clock(a.time) : a.day_part ? PART[a.day_part] : '';
+    return '<div class="plan"><span class="kind">' + esc(KIND[a.kind] || 'Plan') + '</span><div class="body"><span class="title">' +
+      esc(title) + '</span>' + (sub.length ? '<span class="sub">' + esc(sub.join(' · ')) + '</span>' : '') +
+      '</div>' + (when ? '<span class="when">' + esc(when) + '</span>' : '') + '</div>';
+  }
+
+  // ── to the app, or away ─────────────────────────────────────────────────
+  $('handoff').addEventListener('click', function () {
+    var btn = $('handoff');
+    btn.disabled = true;
+    sb.rpc('guest_handoff_code').then(function (r) {
+      btn.disabled = false;
+      if (r.error || !r.data) throw r.error || new Error('no code');
+      $('handoff-fine').textContent = 'Opening Onla… If nothing happens, get Onla for iPhone, then tap Open in the app again.';
+      location.href = 'onla://handoff/' + r.data;
+    }).catch(function () {
+      btn.disabled = false;
+      $('handoff-fine').textContent = "Couldn't hand the trip over. Check your connection and try again.";
+    });
+  });
+
+  $('leave').addEventListener('click', function () {
+    if (!window.confirm('Stop following this trip? You would need a new link to see it again.')) return;
+    leaving = true;
+    clearInterval(pollTimer);
+    if (channel) { sb.removeChannel(channel); channel = null; }
+    sb.rpc('leave_trip', { p_trip: tripId }).then(function () {
+      remember(null);
+      return sb.auth.signOut();
+    }).then(function () {
+      dead('You stopped following this trip', 'Ask whoever invited you if you want to see it again.');
+    });
+  });
+
+  if (!sb) { dead("Couldn't open the invite", 'Check your connection and try the link again.'); return; }
+  start();
 })();
 </script>
 </body>

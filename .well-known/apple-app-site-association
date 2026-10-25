@@ -1,0 +1,16 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "D3MX27C244.com.onlatravel.app",
+        "appIDs": ["D3MX27C244.com.onlatravel.app"],
+        "paths": ["/join/*", "/handoff/*"],
+        "components": [
+          { "/": "/join/*", "comment": "Shared-trip invite links open the app when it's installed" },
+          { "/": "/handoff/*", "comment": "A trip followed in a browser, moving to the app" }
+        ]
+      }
+    ]
+  }
+}
