@@ -45,21 +45,33 @@
 <main>
   <div class="top"><a href="/">‹ Onla</a></div>
   <h1>Privacy</h1>
-  <p class="date">Effective October 24, 2026</p>
+  <p class="date">Effective October 25, 2026</p>
 
   <p class="lede">Your trips are yours. Onla works fully offline with no account, sells nothing to anyone, shows no ads, and does no cross-app tracking. This page explains the whole picture.</p>
 
   <h2>On your device, by default</h2>
-  <p>Everything you put in Onla — trips, itineraries, ideas, documents — lives in a database on your device. You can use Onla with no account at all, forever, entirely offline. You can export all of it, or delete all of it, from the You tab at any time.</p>
+  <p>Everything you put in Onla — trips, itineraries, ideas, documents — lives in a database on your device. You can use Onla with no account at all, forever, entirely offline. You can export all of it, or delete all of it, from the You screen (the circle at the top right of the app) at any time.</p>
 
   <h2>If you sign in (optional)</h2>
   <p>Signing in exists for one reason: backing up your trips and syncing them across your devices. When you do:</p>
   <ul>
     <li><strong>Your email address</strong> is used to sign you in (a one-time code — no password) and to identify your account.</li>
-    <li><strong>Your trips and itineraries</strong> are stored on our servers (hosted on Supabase) so your other devices can pull them. Access is scoped to your account alone.</li>
-    <li><strong>Documents you attach</strong> (tickets, confirmations) are stored in private cloud storage, accessible only to you.</li>
+    <li><strong>Your trips and itineraries</strong> are stored on our servers (hosted on Supabase) so your other devices can pull them. Only you can reach them, plus the people you share a trip with (see Shared trips, below).</li>
+    <li><strong>Documents you attach</strong> (tickets, confirmations) are stored in private cloud storage, accessible only to you and, on a trip you share, to the people who can edit it.</li>
   </ul>
-  <p>Sign out any time — your trips stay on your device.</p>
+  <p>Onla on the web, at app.onlatravel.com, needs this sign-in and works online only: your trips load from your account each time, and the browser keeps nothing but your sign-in.</p>
+  <p>Sign out any time — your own trips stay on your device; trips other people shared with you leave it until you sign in again.</p>
+
+  <h2>Shared trips</h2>
+  <p>You can invite people to a trip. Each person on it is an <strong>organizer</strong> (invites people and manages the trip), can <strong>edit</strong> (adds and changes plans), or can <strong>view</strong>. Sharing needs an account.</p>
+  <ul>
+    <li><strong>What others see of you:</strong> everyone on a trip, viewers included, sees the names and roles of the others on it. Your name is the one you were invited under or chose. Your email address is never shown to them.</li>
+    <li><strong>Organizers and editors</strong> see the whole trip, including documents and confirmation numbers, who added each plan, and a history of recent changes (who added, changed, or removed a plan; who joined or left), kept for 180 days.</li>
+    <li><strong>Viewers</strong> get a filtered copy: no confirmation numbers, seats, or documents, and no costs unless an organizer chooses to show them.</li>
+    <li><strong>Invite links</strong> are random codes that we store only in scrambled form. Most work for a limited number of people and expire after 7 days. A link to view lasts until a few days after the trip and, unless an organizer turns this off, asks an organizer before anyone gets in. A link that many people use in a short time pauses itself.</li>
+    <li><strong>Without an account:</strong> someone with a link to view can look at the trip in their web browser, or in the app as a guest. Onla gives them a guest sign-in with no email address, and they type the name the organizer sees. Guests can only view. A guest sign-in nobody has used for 60 days is deleted automatically; a guest who signs in with an email address keeps the trip.</li>
+    <li><strong>Leaving:</strong> anyone can leave a trip (a trip always keeps an organizer, so the last one makes someone else an organizer first), and organizers can remove people. The plans someone added stay with the trip.</li>
+  </ul>
 
   <h2>Importing bookings</h2>
   <p>Onla can read a booking confirmation and file it to the right trip. This is optional, needs an account, and is <strong>off until you allow it</strong>: the first time you import a booking, Onla asks, and nothing is read before you say yes.</p>
@@ -68,10 +80,10 @@
     <li><strong>Email:</strong> a confirmation you forward to your Onla import address reaches us through Cloudflare's email routing. If you have allowed reading, the extracted booking waits in your private review inbox, with the email's subject and sender, until you file or dismiss it; the rest of the email is not kept. If you have not allowed reading, the email is not read and its contents are not kept; Onla keeps only a note of who sent it and when, so the app can tell you it arrived and why it wasn't read. We keep a record of the addresses you've forwarded from so your future forwards reach your account.</li>
     <li><strong>Photos and documents:</strong> when you photograph or share a confirmation, the image is uploaded to your private storage just long enough to read it, then the temporary copy is deleted. If you choose not to have it read, a shared file can still be saved to a trip as a document. A document already saved on a trip is never read on its own; it is read only if you ask, from that document's menu.</li>
   </ul>
-  <p>Your choice is saved with your account, along with the date you made it, so it applies on all your devices. You can turn reading off again at any time with the switch in the You tab; bookings already on your trips stay where they are.</p>
+  <p>Your choice is saved with your account, along with the date you made it, so it applies on all your devices. You can turn reading off again at any time with the switch on the You screen; bookings already on your trips stay where they are.</p>
 
   <h2>Notifications</h2>
-  <p>If you allow notifications, we store a push token for your device so we can tell you when a forwarded booking is ready to review. Decline, and everything still works — arrivals just wait quietly in the app.</p>
+  <p>If you allow notifications, we store a push token for your device so we can tell you when a forwarded booking is ready to review and, on trips you organize, when someone joins or asks to view. Decline, and everything still works — arrivals just wait quietly in the app.</p>
 
   <h2>Places, weather, flights, and photos</h2>
   <p>When you search for a destination, Onla asks mapping, geocoding, weather, and photo services (such as Pexels for destination imagery) about that <em>place</em>. These lookups carry the place — not your identity.</p>
@@ -89,11 +101,13 @@
 
   <h2>Your controls</h2>
   <ul>
-    <li><strong>Export all data</strong> — the You tab, anytime, no questions.</li>
-    <li><strong>Delete all data</strong> — the You tab; removes the cloud copy too when signed in.</li>
-    <li><strong>Sign out</strong> — your trips remain on your device.</li>
-    <li><strong>Booking reading</strong> — off until you allow it; turn it off again in the You tab, anytime.</li>
+    <li><strong>Export all data</strong> — the You screen, anytime, no questions.</li>
+    <li><strong>Delete all data</strong> — the You screen; when signed in, this deletes your account and its cloud copy too.</li>
+    <li><strong>Sign out</strong> — your own trips remain on your device.</li>
+    <li><strong>Leave a shared trip</strong> — anytime, from the trip's People screen.</li>
+    <li><strong>Booking reading</strong> — off until you allow it; turn it off again on the You screen, anytime.</li>
   </ul>
+  <p>If you delete your account while you share trips: a trip you created passes to another organizer if it has one, and is deleted for everyone if it doesn't; plans you added to other people's trips stay with those trips; and your documents are deleted from every trip.</p>
 
   <h2>Children</h2>
   <p>Onla is not directed at children under 13, and we don't knowingly collect their information.</p>
