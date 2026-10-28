@@ -101,11 +101,11 @@
       </div>
       <p class="who" id="who"></p>
       <div class="stack">
-        <a class="btn primary" id="open" href="#">Open in Onla</a>
-        <button class="btn secondary" id="browse" type="button" hidden>View in your browser</button>
-        <a class="btn secondary" id="get" href="https://apps.apple.com/app/id6793815689">Get Onla for iPhone</a>
+        <a class="btn primary" id="web" href="https://app.onlatravel.com/">Join in your browser</a>
+        <button class="btn primary" id="browse" type="button" hidden>View in your browser</button>
+        <a class="btn secondary" id="open" href="#">Open in the Onla app</a>
       </div>
-      <p class="fine" id="invite-fine">Already have Onla? Tap <b>Open in Onla</b> to see the trip and join. New to it? Get the app, then come back and tap this link again.</p>
+      <p class="fine" id="invite-fine">Join here with your email, no app needed. Have Onla on your iPhone? Open it there instead.</p>
     </div>
   </section>
 
@@ -140,7 +140,7 @@
       <div id="days" class="stack" style="gap:22px"></div>
       <div class="stack">
         <button class="btn secondary" id="handoff" type="button">Open in the app</button>
-        <p class="fine" id="handoff-fine">Moves this trip to Onla on your phone, where it keeps updating. Don't have it yet? <a href="https://apps.apple.com/app/id6793815689">Get Onla for iPhone</a> first.</p>
+        <p class="fine" id="handoff-fine">Moves this trip to Onla on your phone, where it keeps updating.</p>
         <button class="link" type="button" id="leave">Stop following this trip</button>
       </div>
     </div>
@@ -197,6 +197,8 @@
 
   if (!/^[A-Za-z0-9_-]{20,40}$/.test(code)) { dead('This link no longer works', REASONS.unknown); return; }
   $('open').href = 'onla://join/' + code;
+  // The web app joins with an account: sign in there, then the invite opens.
+  $('web').href = 'https://app.onlatravel.com/join/' + code;
 
   // ── the invite ──────────────────────────────────────────────────────────
   function start() {
@@ -225,16 +227,17 @@
       who.appendChild(b);
       who.appendChild(document.createTextNode(
         ' invited you to ' + (p.role === 'editor' ? 'plan' : 'follow') + ' this trip' + (p.asks_first ? '. An organizer lets you in.' : '.')));
-      // Following needs no app; planning does.
+      // Following needs no account at all; planning signs in on the web app.
       var viewing = p.role === 'viewer';
       $('browse').hidden = !viewing;
+      $('web').hidden = viewing;
       if (viewing) {
-        $('invite-fine').textContent = 'Open it in Onla, or follow it right here in your browser. No account needed.';
+        $('invite-fine').textContent = 'Follow it right here, no account needed. Have Onla on your iPhone? Open it there instead.';
       }
       show('invite');
     }).catch(function () {
       $('trip').textContent = 'A trip on Onla';
-      $('who').textContent = 'Open the app to see the trip and join.';
+      $('who').textContent = "Couldn't load the invite here. You can still join in your browser or the app.";
       show('invite');
     });
   }
